@@ -5,12 +5,13 @@ const mongoose = require('mongoose');
 
 // Local Files
 const blogsRouter = require('./controllers/blogs');
+const config = require('./utils/config');
 
 const app = express();
 
 mongoose.set('strictQuery', false);
 
-const mongoUrl = process.env.MONGODB_URI;
+const mongoUrl = config.MONGODB_URI;
 mongoose
   .connect(mongoUrl)
   .then(() => {
