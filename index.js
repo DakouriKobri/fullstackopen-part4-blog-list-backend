@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Local Files
-const Blog = require('./models/blog');
+const blogRouter = require('./controllers/blogs');
 
 const app = express();
 
@@ -24,26 +24,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/blogs', (request, response) => {
-  Blog.find({}).then((fetchedBlogs) => {
-    response.json(fetchedBlogs);
-  });
-});
-
-app.post('/api/blogs', (request, response) => {
-  const { title, author, url, likes } = request.body;
-
-  const blog = new Blog({
-    title,
-    author,
-    url,
-    likes,
-  });
-
-  blog.save().then((savedBlog) => {
-    response.status(201).json(savedBlog);
-  });
-});
+app.use('/api/blogs', blogRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
