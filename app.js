@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 // Local Files
 const blogsRouter = require('./controllers/blogs');
 const config = require('./utils/config');
+const logger = require('./utils/logger');
 
 const app = express();
 
@@ -15,10 +16,10 @@ const mongoUrl = config.MONGODB_URI;
 mongoose
   .connect(mongoUrl)
   .then(() => {
-    console.log('Server connected to MongoDB');
+    logger.info('Server connected to MongoDB');
   })
   .catch((error) => {
-    console.log('Error connecting server to MongoDB:', error.message);
+    logger.error('Error connecting server to MongoDB:', error.message);
   });
 
 app.use(cors());
