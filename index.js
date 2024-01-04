@@ -30,6 +30,12 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
+app.get('/api/blogs', (request, response) => {
+  Blog.find({}).then((fetchedBlogs) => {
+    response.json(fetchedBlogs);
+  });
+});
+
 app.post('/api/blogs', (request, response) => {
   const { title, author, url, likes } = request.body;
 
