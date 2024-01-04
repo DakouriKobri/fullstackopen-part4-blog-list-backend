@@ -4,18 +4,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+// Local Files
+const Blog = require('./models/blog');
+
 const app = express();
 
 mongoose.set('strictQuery', false);
-
-const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
-});
-
-const Blog = mongoose.model('Blog', blogSchema);
 
 const mongoUrl = process.env.MONGODB_URI;
 mongoose
