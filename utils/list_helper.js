@@ -62,9 +62,27 @@ function mostBlogs(blogs) {
   return topAuthor;
 }
 
+// Get author with highest blog's likes
+
+function mostLikes(blogs) {
+  const mostLikesBlog = _.maxBy(blogs, 'likes');
+
+  if (mostLikesBlog === undefined) {
+    return null;
+  }
+
+  const topBlog = {
+    author: mostLikesBlog.author,
+    likes: mostLikesBlog.likes,
+  };
+
+  return topBlog;
+}
+
 module.exports = {
   dummy,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
   totalLikes,
 };
