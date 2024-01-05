@@ -1,13 +1,18 @@
+// NPM Packages
+const _ = require('lodash');
+
 // eslint-disable-next-line no-unused-vars
 function dummy(blogs) {
   return 1;
 }
 
+// Get sum of all likes
 function totalLikes(blogs) {
   const reducer = (sum, blog) => sum + blog.likes;
   return blogs.reduce(reducer, 0);
 }
 
+// Get most favored blog
 function favoriteBlog(blogs) {
   const blogsWithLikes = blogs.filter(
     (blog) => blog.likes !== undefined && blog.likes !== null
@@ -30,30 +35,23 @@ function favoriteBlog(blogs) {
   return favBlog;
 }
 
+// Get author with highest number of blogs
+function objectToArray(object) {
+  let array = [];
+  for (const i in object) {
+    array = array.concat({ author: i, blogs: object[i] });
+  }
+  return array;
+}
+
 function mostBlogs(blogs) {
-  const countBlogsPerAuthor = (array, name) => {
-    const reducer = (sum, item) => (item.author === name ? sum + 1 : sum);
-    return array.reduce(reducer, 0);
-  };
-
-  const authorsList = blogs.map((blog) => blog.author);
-  const uniqueAuthorsList = [...new Set(authorsList)];
-
-  const authors = uniqueAuthorsList.map((author) => {
-    const blogger = {
-      author,
-      blogs: countBlogsPerAuthor(blogs, author),
-    };
-    return blogger;
-  });
+  const authorsObject = _.countBy(_.flatMap(blogs), 'author');
+  const authors = objectToArray(authorsObject);
 
   if (authors.length === 0) return null;
 
-  const topAuthorBlogCount = Math.max(...authors.map((author) => author.blogs));
-
-  const topAuthor = authors.find(
-    (author) => author.blogs === topAuthorBlogCount
-  );
+  const highestBlogCount = Math.max(...authors.map((author) => author.blogs));
+  const topAuthor = authors.find((author) => author.blogs === highestBlogCount);
 
   return topAuthor;
 }
