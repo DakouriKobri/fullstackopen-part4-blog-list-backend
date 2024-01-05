@@ -30,8 +30,37 @@ function favoriteBlog(blogs) {
   return favBlog;
 }
 
+function mostBlogs(blogs) {
+  const countBlogsPerAuthor = (array, name) => {
+    const reducer = (sum, item) => (item.author === name ? sum + 1 : sum);
+    return array.reduce(reducer, 0);
+  };
+
+  const authorsList = blogs.map((blog) => blog.author);
+  const uniqueAuthorsList = [...new Set(authorsList)];
+
+  const authors = uniqueAuthorsList.map((author) => {
+    const blogger = {
+      author,
+      blogs: countBlogsPerAuthor(blogs, author),
+    };
+    return blogger;
+  });
+
+  if (authors.length === 0) return null;
+
+  const topAuthorBlogCount = Math.max(...authors.map((author) => author.blogs));
+
+  const topAuthor = authors.find(
+    (author) => author.blogs === topAuthorBlogCount
+  );
+
+  return topAuthor;
+}
+
 module.exports = {
   dummy,
   favoriteBlog,
+  mostBlogs,
   totalLikes,
 };
