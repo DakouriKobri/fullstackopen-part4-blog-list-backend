@@ -7,12 +7,14 @@ function dummy(blogs) {
 }
 
 // Get sum of all likes
+
 function totalLikes(blogs) {
   const reducer = (sum, blog) => sum + blog.likes;
   return blogs.reduce(reducer, 0);
 }
 
 // Get most favored blog
+
 function favoriteBlog(blogs) {
   const blogsWithLikes = blogs.filter(
     (blog) => blog.likes !== undefined && blog.likes !== null
@@ -36,17 +38,21 @@ function favoriteBlog(blogs) {
 }
 
 // Get author with highest number of blogs
-function objectToArray(object) {
+
+// turn object into array
+function objectToArray(object, keyLabel, valueLabel) {
   let array = [];
+  const value = valueLabel.toLowerCase();
+  const key = keyLabel.toLowerCase();
   for (const i in object) {
-    array = array.concat({ author: i, blogs: object[i] });
+    array = array.concat({ [key]: i, [value]: object[i] });
   }
   return array;
 }
 
 function mostBlogs(blogs) {
   const authorsObject = _.countBy(_.flatMap(blogs), 'author');
-  const authors = objectToArray(authorsObject);
+  const authors = objectToArray(authorsObject, 'author', 'blogs');
 
   if (authors.length === 0) return null;
 
