@@ -1,18 +1,15 @@
 // NPM Packages
-const { Router } = require('express');
+const blogsRouter = require('express').Router();
 
 // Local Files
-const Blog = require('../models/Blog');
+const Blog = require('../models/blog');
 
-const blogRouter = Router();
-
-blogRouter.get('/', (request, response) => {
-  Blog.find({}).then((fetchedBlogs) => {
-    response.json(fetchedBlogs);
-  });
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({});
+  response.json(blogs);
 });
 
-blogRouter.post('/', (request, response) => {
+blogsRouter.post('/', (request, response) => {
   const { title, author, url, likes } = request.body;
 
   const blog = new Blog({
@@ -27,4 +24,4 @@ blogRouter.post('/', (request, response) => {
   });
 });
 
-module.exports = blogRouter;
+module.exports = blogsRouter;
