@@ -34,6 +34,27 @@ test('unique identifier of each blog post is id', async () => {
   }
 });
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Top 10 Node.js Debugging Tips to Debug Like a Pro',
+    author: 'Lou',
+    url: 'https://stackify.com/node-js-debugging-tips/',
+    likes: 41,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd.length).toEqual(helper.initialBlogs.length + 1);
+
+  const titles = blogsAtEnd.map((blog) => blog.title);
+  expect(titles).toContain(newBlog.title);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
