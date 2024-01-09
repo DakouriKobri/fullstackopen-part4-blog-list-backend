@@ -113,6 +113,24 @@ test('delete a blog returns statusCode 204 if id is valid', async () => {
   expect(titles).not.toContain(blogToDelete.title);
 });
 
+test('successful blog update returns status code 200 with valid data', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+
+  const blogUpdate = {
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 10,
+  };
+
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(blogUpdate).expect(200);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  const updatedBlog = blogsAtEnd[0];
+  expect(updatedBlog.likes).toEqual(10);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
