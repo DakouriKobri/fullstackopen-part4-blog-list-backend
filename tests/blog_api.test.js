@@ -55,6 +55,25 @@ test('a valid blog can be added', async () => {
   expect(titles).toContain(newBlog.title);
 });
 
+test('missing likes defaults to 0', async () => {
+  const newBlog = {
+    title: 'Understanding memory leaks in Node.js apps',
+    // eslint-disable-next-line quotes
+    author: "Faith Ng'etich",
+    url: 'https://blog.logrocket.com/understanding-memory-leaks-node-js-apps/',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  const savedBlog = blogsAtEnd.find((blog) => blog.title === newBlog.title);
+  expect(savedBlog.likes).toEqual(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
