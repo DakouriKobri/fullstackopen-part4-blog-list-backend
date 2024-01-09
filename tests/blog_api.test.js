@@ -74,6 +74,32 @@ test('missing likes defaults to 0', async () => {
   expect(savedBlog.likes).toEqual(0);
 });
 
+test('missing title returns status code 400', async () => {
+  const newBlog = {
+    author: 'John Doe',
+    url: 'http://example.com/johndoes-blog',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+});
+
+test('missing url returns status code 400', async () => {
+  const newBlog = {
+    title: 'The Art of coding RESTful APIs',
+    author: 'John Doe',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
