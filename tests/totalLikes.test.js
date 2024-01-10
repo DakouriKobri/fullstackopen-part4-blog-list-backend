@@ -1,7 +1,8 @@
 // Local Files
 const totalLikes = require('../utils/list_helper').totalLikes;
-const listWithOneBlog = require('../dummyData').listWithOneBlog;
-const listWithMoreThanOneBlog = require('../dummyData').listWithMoreThanOneBlog;
+const listWithOneBlog = require('./test_helper_data').listWithOneBlog;
+const listWithMoreThanOneBlog =
+  require('./test_helper_data').listWithMoreThanOneBlog;
 
 describe('total likes', () => {
   // totalLikes argument is an empty array

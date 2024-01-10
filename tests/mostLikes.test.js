@@ -1,7 +1,8 @@
 // Local Files
 const mostLikes = require('../utils/list_helper').mostLikes;
-const blogs = require('../dummyData').blogs;
-const missingOrNullLikesBlogs = require('../dummyData').missingOrNullLikesBlogs;
+const blogs = require('./test_helper_data').blogs;
+const missingOrNullLikesBlogs =
+  require('./test_helper_data').missingOrNullLikesBlogs;
 
 describe('Most likes blog', () => {
   // Empty blogs

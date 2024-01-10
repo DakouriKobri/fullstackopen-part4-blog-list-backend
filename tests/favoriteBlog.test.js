@@ -1,7 +1,9 @@
 // Local Files
 const favoriteBlog = require('../utils/list_helper').favoriteBlog;
-const missingOrNullLikesBlogs = require('../dummyData').missingOrNullLikesBlogs;
-const containsBlogsWithLikes = require('../dummyData').containsBlogsWithLikes;
+const missingOrNullLikesBlogs =
+  require('./test_helper_data').missingOrNullLikesBlogs;
+const containsBlogsWithLikes =
+  require('./test_helper_data').containsBlogsWithLikes;
 
 describe('favorite blog', () => {
   // favoriteBlog's argument is empty array

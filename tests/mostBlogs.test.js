@@ -1,6 +1,6 @@
 // Local Files
 const mostBlogs = require('../utils/list_helper').mostBlogs;
-const blogs = require('../dummyData').blogs;
+const blogs = require('./test_helper_data').blogs;
 
 describe('Most blogs author', () => {
   // Blogs is empty
