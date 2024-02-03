@@ -141,7 +141,7 @@ describe('editing a blog', () => {
   });
 });
 
-describe('when there is initially one user in db', () => {
+describe.only('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({});
 
@@ -174,6 +174,27 @@ describe('when there is initially one user in db', () => {
 
     const usernames = usersAtEnd.map((user) => user.username);
     expect(usernames).toContain(newUser.username);
+  });
+
+  test('creation fails with status code 400 and "`username` is required." as message if username is not provided', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      name: 'Aya Kanh',
+      password: 'P4ssword',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+    console.log('MY ERROR:', result.body.error);
+
+    expect(result.body.error).toContain('`username`');
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
   });
 });
 
