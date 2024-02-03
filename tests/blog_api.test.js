@@ -1,11 +1,13 @@
 // NPM Packages
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcrypt');
 
 // Local Files
 const app = require('../app');
 const Blog = require('../models/blog');
 const helper = require('./test_helper');
+const User = require('../models/user');
 
 const api = supertest(app);
 
@@ -136,6 +138,42 @@ describe('editing a blog', () => {
     const blogsAtEnd = await helper.blogsInDb();
     const updatedBlog = blogsAtEnd[0];
     expect(updatedBlog.likes).toEqual(10);
+  });
+});
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash('secretly', 10);
+    const user = new User({
+      username: 'root',
+      passwordHash,
+    });
+
+    await user.save();
+  });
+
+  test.only('creation succeeds with fresh username', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'aya',
+      name: 'Aya Kanh',
+      password: 'P4ssword',
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+    const usernames = usersAtEnd.map((user) => user.username);
+    expect(usernames).toContain(newUser.username);
   });
 });
 

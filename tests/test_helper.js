@@ -1,5 +1,6 @@
 // Local Files
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const initialBlogs = [
   {
@@ -27,7 +28,13 @@ async function blogsInDb() {
   return blogs.map((note) => note.toJSON());
 }
 
+async function usersInDb() {
+  const users = await User.find({});
+  return users.map((user) => user.toJSON());
+}
+
 module.exports = {
   initialBlogs,
   blogsInDb,
+  usersInDb,
 };
