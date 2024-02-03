@@ -192,7 +192,7 @@ describe('when there is initially one user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(result.body.error).toContain('`username`');
+    expect(result.body.error).toContain('`username` is required.');
 
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
@@ -234,7 +234,9 @@ test('creation fails with status code 400 and "`username` must be at least 3 cha
     .expect(400)
     .expect('Content-Type', /application\/json/);
 
-  expect(result.body.error).toContain('`username`');
+  expect(result.body.error).toContain(
+    '`username` must be at least 3 characters long.'
+  );
 
   const usersAtEnd = await helper.usersInDb();
   expect(usersAtEnd).toEqual(usersAtStart);
