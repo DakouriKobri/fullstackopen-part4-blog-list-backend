@@ -217,7 +217,7 @@ test('creation fails with status code 400 and "`password` is required." as messa
   expect(usersAtEnd).toEqual(usersAtStart);
 });
 
-test('creation fails with status code 400 and "`username` must be at least 3 characters long." as message if password is not provided', async () => {
+test('creation fails with status code 400 and "`username` must be at least 3 characters long." as message if username is less than 3 characters long', async () => {
   const usersAtStart = await helper.usersInDb();
 
   const newUser = {
@@ -233,6 +233,29 @@ test('creation fails with status code 400 and "`username` must be at least 3 cha
     .expect('Content-Type', /application\/json/);
 
   expect(result.body.error).toContain('`username`');
+
+  const usersAtEnd = await helper.usersInDb();
+  expect(usersAtEnd).toEqual(usersAtStart);
+});
+
+test.only('creation fails with status code 400 and "`password` must be at least 3 characters long." as message if password is less than 3 characters long', async () => {
+  const usersAtStart = await helper.usersInDb();
+
+  const newUser = {
+    username: 'aya',
+    name: 'Aya Kanh',
+    password: 'P4',
+  };
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+
+  expect(result.body.error).toBe(
+    '`password` must be at least 3 characters long.'
+  );
 
   const usersAtEnd = await helper.usersInDb();
   expect(usersAtEnd).toEqual(usersAtStart);
