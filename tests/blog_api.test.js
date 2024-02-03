@@ -189,7 +189,6 @@ describe('when there is initially one user in db', () => {
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/);
-    console.log('MY ERROR:', result.body.error);
 
     expect(result.body.error).toContain('`username`');
 
@@ -213,6 +212,27 @@ test('creation fails with status code 400 and "`password` is required." as messa
     .expect('Content-Type', /application\/json/);
 
   expect(result.body.error).toBe('`password` is required.');
+
+  const usersAtEnd = await helper.usersInDb();
+  expect(usersAtEnd).toEqual(usersAtStart);
+});
+
+test('creation fails with status code 400 and "`username` must be at least 3 characters long." as message if password is not provided', async () => {
+  const usersAtStart = await helper.usersInDb();
+
+  const newUser = {
+    username: 'ay',
+    name: 'Aya Kanh',
+    password: 'P4ssword',
+  };
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+
+  expect(result.body.error).toContain('`username`');
 
   const usersAtEnd = await helper.usersInDb();
   expect(usersAtEnd).toEqual(usersAtStart);
