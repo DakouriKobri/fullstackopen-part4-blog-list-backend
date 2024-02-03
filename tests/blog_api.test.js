@@ -111,6 +111,8 @@ describe('deletion of a blog', () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
 
+    console.log('blog to delete:', blogToDelete);
+
     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
@@ -238,7 +240,7 @@ test('creation fails with status code 400 and "`username` must be at least 3 cha
   expect(usersAtEnd).toEqual(usersAtStart);
 });
 
-test.only('creation fails with status code 400 and "`password` must be at least 3 characters long." as message if password is less than 3 characters long', async () => {
+test('creation fails with status code 400 and "`password` must be at least 3 characters long." as message if password is less than 3 characters long', async () => {
   const usersAtStart = await helper.usersInDb();
 
   const newUser = {
