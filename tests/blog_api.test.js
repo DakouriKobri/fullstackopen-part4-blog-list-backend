@@ -263,6 +263,27 @@ test('creation fails with status code 400 and "`password` must be at least 3 cha
   expect(usersAtEnd).toEqual(usersAtStart);
 });
 
+test('create fails with status code 400 and "`username` is already taken." as message, if the username already exists in the database', async () => {
+  const usersAtStart = await helper.usersInDb();
+
+  const newUser = {
+    username: 'root',
+    name: 'Aya Kanh',
+    password: 'P4ssword',
+  };
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+
+  expect(result.body.error).toContain('expected `username` to be unique.');
+
+  const usersAtEnd = await helper.usersInDb();
+  expect(usersAtEnd).toEqual(usersAtStart);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
