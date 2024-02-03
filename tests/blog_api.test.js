@@ -141,7 +141,7 @@ describe('editing a blog', () => {
   });
 });
 
-describe.only('when there is initially one user in db', () => {
+describe('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({});
 
@@ -196,6 +196,26 @@ describe.only('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
   });
+});
+
+test('creation fails with status code 400 and "`password` is required." as message if password is not provided', async () => {
+  const usersAtStart = await helper.usersInDb();
+
+  const newUser = {
+    username: 'aya',
+    name: 'Aya Kanh',
+  };
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+
+  expect(result.body.error).toBe('`password` is required.');
+
+  const usersAtEnd = await helper.usersInDb();
+  expect(usersAtEnd).toEqual(usersAtStart);
 });
 
 afterAll(async () => {

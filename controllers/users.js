@@ -10,6 +10,9 @@ const usersRouter = express.Router();
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body;
 
+  if (!password) {
+    return response.status(400).json({ error: '`password` is required.' });
+  }
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
