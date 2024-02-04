@@ -19,17 +19,21 @@ blogsRouter.post('/', async (request, response) => {
 
   const usersInDb = await User.find({});
   const randomUserIndex = Math.floor(Math.random() * usersInDb.length);
-  const randomUserId = usersInDb[randomUserIndex].id;
+  const randomUser = usersInDb[randomUserIndex];
 
   const blog = new Blog({
     title,
     author,
     url,
     likes: likes ?? 0,
-    user: randomUserId,
+    user: randomUser.id,
   });
 
   const savedBlog = await blog.save();
+
+  randomUser.blogs = randomUser.blogs.concat(savedBlog._id);
+  await randomUser.save();
+
   response.status(201).json(savedBlog);
 });
 
