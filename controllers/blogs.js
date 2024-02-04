@@ -3,6 +3,7 @@ const blogsRouter = require('express').Router();
 
 // Local Files
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({});
@@ -12,11 +13,16 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   const { title, author, url, likes } = request.body;
 
+  const usersInDb = await User.find({});
+  const randomUserIndex = Math.floor(Math.random() * usersInDb.length);
+  const randomUserId = usersInDb[randomUserIndex].id;
+
   const blog = new Blog({
     title,
     author,
     url,
     likes: likes ?? 0,
+    user: randomUserId,
   });
 
   const savedBlog = await blog.save();
