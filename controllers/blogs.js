@@ -1,5 +1,6 @@
 // NPM Packages
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 // Local Files
 const Blog = require('../models/blog');
@@ -16,25 +17,37 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
+function getTokenFrom(request) {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '');
+  }
+  return null;
+}
+
 blogsRouter.post('/', async (request, response) => {
   const { title, author, url, likes } = request.body;
 
-  const usersInDb = await User.find({});
-  const randomUserIndex = Math.floor(Math.random() * usersInDb.length);
-  const randomUser = usersInDb[randomUserIndex];
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'Invalid token' });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title,
     author,
     url,
     likes: likes ?? 0,
-    user: randomUser.id,
+    user: user._id,
   });
 
   const savedBlog = await blog.save();
 
-  randomUser.blogs = randomUser.blogs.concat(savedBlog._id);
-  await randomUser.save();
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
 
   response.status(201).json(savedBlog);
 });
