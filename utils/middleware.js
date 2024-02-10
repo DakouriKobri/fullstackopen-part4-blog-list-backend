@@ -15,6 +15,22 @@ function errorHandler(error, request, response, next) {
   next(error);
 }
 
+function tokenExtractor(request, response, next) {
+  try {
+    const authorization = request.get('authorization');
+    if (!authorization || !authorization.startsWith('Bearer ')) {
+      return response
+        .status(401)
+        .json({ message: 'Invalid authorization header' });
+    }
+    request.token = authorization.replace('Bearer ', '');
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   errorHandler,
+  tokenExtractor,
 };
