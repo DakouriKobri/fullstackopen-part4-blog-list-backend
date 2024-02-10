@@ -1,9 +1,11 @@
 // NPM Packages
-const blogsRouter = require('express').Router();
+const express = require('express');
 
 // Local Files
 const Blog = require('../models/blog');
 const User = require('../models/user');
+
+const blogsRouter = express.Router();
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {
