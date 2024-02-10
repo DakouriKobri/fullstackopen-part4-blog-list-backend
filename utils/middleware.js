@@ -1,3 +1,4 @@
+// Local Files
 const logger = require('./logger');
 
 function errorHandler(error, request, response, next) {
@@ -7,6 +8,8 @@ function errorHandler(error, request, response, next) {
     return response.status(400).send({ error: 'Malformed id' });
   } else if (error.name === 'ValidationError') {
     response.status(400).send({ error: error.message });
+  } else if (error.name === 'JsonWebTokenError') {
+    return response.status(401).json({ error: error.message });
   }
 
   next(error);
